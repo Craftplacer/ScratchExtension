@@ -274,7 +274,7 @@
         } catch (e) {
           console.error(e);
         }
-return "end";
+        return "end";
     }
 
     var descriptor = {
@@ -305,8 +305,8 @@ return "end";
             [' ', 'draw image %s x: %n y: %n w: %n h: %n', 'drawImageSizeCanvas'],
             [' ', 'draw filled rectangle %s x: %n y: %n w: %n h: %n', 'drawFilledRectangleCanvas'],
             ['--'],
-            ['r', 'convert %n to canvas X', 'convertXCanvas'],
-            ['r', 'convert %n to canvas Y', 'convertYCanvas'],
+            ['r', '%n to canvas X', 'convertXCanvas',0],
+            ['r', '%n to canvas Y', 'convertYCanvas',0],
             ['--'],
             ['--'],
             ['s', '🔊 SOUNDS -------------------------','splitter'],
