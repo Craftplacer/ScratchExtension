@@ -103,7 +103,7 @@
         saveLSVariables();
       }
     };
-    ext.variableOpertion = function (type, name, op, input) {
+    ext.variableOperation = function (type, name, op, input) {
         var value = ext.variableGet(type, name);
 
         //Gurantees de-/incremention of a numeric variable.
@@ -322,7 +322,7 @@ return "end";
             ['r', 'get %m.variableType %s', 'variableGet', '🐱','variable'],
             ['b', 'get %m.variableType %s', 'variableGetBoolean', '🐱','variable'],
             [' ', 'set %m.variableType %s to %s', 'variableSet', '🐱','variable', 'value'],
-            [' ', '%m.variableType %s %m.variableOperation %s', 'variableOpertion', '🐱','variable', '++',1],
+            [' ', '%m.variableType %s %m.variableOperation %s', 'variableOperation', '🐱','variable', '++',1],
             [' ', 'delete %m.variableType %s', 'variableDelete', '🐱','variable'],
             ['b', '%m.variableType %s exist?', 'variableExists', '🐱','variable'],
             ['--'],
