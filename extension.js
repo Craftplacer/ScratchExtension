@@ -66,7 +66,7 @@
       return getOffscreenCanvas().getContext('2d');
     }
 
-    ext.httpGet = function(method, url) {
+    ext.httpRequest = function(method, url) {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open(method, url, false);
         xmlHttp.send(null);
@@ -329,7 +329,7 @@
             ['--'],
             ['s', '⋯ MISC ------------------------------','splitter'],
             ['r', 'if %b then %s else %s', 'valueIf', true, 'yes','no'],
-            ['r', '%m.httpMethod %s', 'httpGet', 'GET', 'example.org'],
+            ['r', '%m.httpMethod %s', 'httpRequest', 'GET', 'example.org'],
             [' ', 'play youtube video from id %s', 'youtube'],
             ['r', '%m.specialCharacters', 'specialCharacter', 'new line'],
             ['R', 'open file dialog test', 'fdialog']
