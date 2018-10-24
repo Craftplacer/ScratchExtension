@@ -28,8 +28,8 @@ In the third field you can choose from `++` (increment) and `--` (decrement). Th
 
 ## Variable Types
 
-| Emoji | Description                                     |
-|-------|-------------------------------------------------|
-| 🐱     | Variable stored in Scratch/extension            |
-| 💾     | Variable stored in localStorage                 |
-| 🍪     | Variable stored as cookie (not implemented yet) |
+| Emoji | Description                                     | Stored temporaily | Stored locally |
+|-------|-------------------------------------------------|-------------------|----------------|
+| 🐱    | Variable stored in Scratch/extension            | X                 |                |
+| 💾    | Variable stored in localStorage                 |                   | X              |
+| 🍪    | Variable stored as cookie (not implemented yet) |                   | X              |
