@@ -6,17 +6,17 @@ The title literally says what it is.
 
 ## Categories and Blocks
 
-### Booleans
+### ✔️ Booleans
 
-### Strings
+### 🔤 Strings
 
-### Images
+### 🎨 Images
 
-### Canvas
+### 🎨 Canvas
 
-### Sounds
+### 🔊 Sounds
 
-### Variables
+### 📚 Variables
 
 #### ![variableGet](/scratchblocks/variableGet.png?raw=true)
 Gets the variable you have specified.
@@ -38,7 +38,7 @@ Deletes the variable you specified
 #### ![variableExists](/scratchblocks/variableExists.png?raw=true)
 Checks if the variable has been set before/exists.
 
-### Misc
+### ⋯ Misc
 
 ## Variable Types
 
