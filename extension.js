@@ -1,5 +1,9 @@
 (function(ext) {
 
+  String.prototype.isEmpty = function() {
+    return (this.length === 0 || !this.trim());
+  };
+
     ext._shutdown = function() {};
     ext._getStatus = function() {
         return {status: 2, msg: 'Ready'};
@@ -82,26 +86,55 @@
         else                    { return false; }
     };
 
+	function checkNetworkVariable() {
+		return !(networkVarProjectId.isEmpty() && networkVarServer.isEmpty());
+	}
+	var networkVarServer = "";
+	var networkVarProjectId = "";
     ext.variableGet = function(type, name) {
-      if (type == '🐱') {
-        return variables[name];
-      }
-      else if (type == '💾') {
-        return localStorageVariables[name];
-      }
+		if (type == 'normal') {
+			return variables[name];
+		}
+		else if (type == 'local storage') {
+			return localStorageVariables[name];
+		}
+		else if (type == 'cloud') {
+			if (checkNetworkVariable()) {
+				alert("Network variable cannot be used because the network information are not completed.");
+				return null;
+			} else {
+				var xmlHttp = new XMLHttpRequest();
+				xmlHttp.open("POST", networkVarServer + "/get", false);
+				xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				xmlHttp.send("projectId=" + networkVarProjectId + "&variable=" + name);
+				return xmlHttp.responseText;
+			}
+			
+		}
       return null;
     };
     ext.variableGetBoolean = function(type, name) {
       return ext.variableGet(type, name) == true;
     }
     ext.variableSet = function(type, name, value) {
-      if (type == '🐱') {
-        variables[name] = value;
-      }
-      else if (type == '💾') {
-        localStorageVariables[name] = value;
-        saveLSVariables();
-      }
+		if (type == 'normal') {
+			variables[name] = value;
+		}
+		else if (type == 'local storage') {
+			localStorageVariables[name] = value;
+			saveLSVariables();
+		}
+		else if (type == 'cloud') {
+			if (checkNetworkVariable()) {
+				alert("Network variable cannot be used because the network information are not completed.");
+				return null;
+			} else {
+				var xmlHttp = new XMLHttpRequest();
+				xmlHttp.open("POST", networkVarServer + "/set", false);
+				xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				xmlHttp.send("projectId=" + networkVarProjectId + "&variable=" + name + "&value=" + value);
+			}
+		}
     };
     ext.variableOperation = function (type, name, op, input) {
         var value = ext.variableGet(type, name);
@@ -119,22 +152,26 @@
         ext.variableSet(type,name,value);
     };
     ext.variableDelete = function(type, name) {
-      if (type == '🐱') {
+      if (type == 'normal') {
         delete variables[name];
       }
-      else if (type == '💾') {
+      else if (type == 'local storage') {
         delete localStorageVariables[name];
         saveLSVariables();
       }
     };
     ext.variableExists = function(type, name) {
-      if (type == '🐱') {
+      if (type == 'normal') {
         return name in variables;
       }
-      else if (type == '💾') {
+      else if (type == 'local storage') {
         return name in localStorageVariables;
       }
     };
+	ext.variableNetworkInit = function (id, server) {
+		networkVarProjectId = id;
+		networkVarServer = server;
+	}
 
     ext.inputToBoolean = function (input) {
         input = input.toLowerCase();
@@ -276,10 +313,29 @@
         }
         return "end";
     }
+    ext.cTest = function() {
+      return true;
+    }
+    ext.breakpoint = function(comment) {
+      var message = "Breakpoint hit";
+      if (!comment.isEmpty()) {
+        message += ": " + comment;
+      }
+      alert(message);
+    }
+
+    
 
     var descriptor = {
         blocks: [
             // Block type, block name, function name, param1 default value, param2 default value
+            ['s', '🐞 DEBUGGING -----------------------','splitter'],
+            ['C', '📝%s','comment'],
+            ['!', '⚫%s', 'breakpoint'],
+            [' ', 'test', 'append:toList:'],
+            ['--'],
+            ['--'],
+
             ['s', '✔️ BOOLEANS -----------------------','splitter'],
             ['b', '%m.boolean', 'valueBoolean', true],
             ['b', '%m.boolean', 'valueBoolean', false],
@@ -319,12 +375,13 @@
             ['--'],
             ['--'],
             ['s', '📚 VARIABLES ----------------------','splitter'],
-            ['r', 'get %m.variableType %s', 'variableGet', '🐱','variable'],
-            ['b', 'get %m.variableType %s', 'variableGetBoolean', '🐱','variable'],
-            [' ', 'set %m.variableType %s to %s', 'variableSet', '🐱','variable', 'value'],
-            [' ', '%m.variableType %s %m.variableOperation %s', 'variableOperation', '🐱','variable', '++',1],
-            [' ', 'delete %m.variableType %s', 'variableDelete', '🐱','variable'],
-            ['b', '%m.variableType %s exist?', 'variableExists', '🐱','variable'],
+            ['r', 'get %m.variableType %s', 'variableGet', 'normal','variable'],
+            ['b', 'get %m.variableType %s', 'variableGetBoolean', 'normal','variable'],
+            [' ', 'set %m.variableType %s to %s', 'variableSet', 'normal','variable', 'value'],
+            [' ', '%m.variableType %s %m.variableOperation %s', 'variableOperation', 'normal','variable', '++',1],
+            [' ', 'delete %m.variableType %s', 'variableDelete', 'normal','variable'],
+			['b', '%m.variableType %s exist?', 'variableExists', 'normal', 'variable'],
+			[' ', 'intialize project: id: %s server: %s', 'variableNetworkInit'],
             ['--'],
             ['--'],
             ['s', '⋯ MISC ------------------------------','splitter'],
@@ -332,7 +389,8 @@
             ['r', '%m.httpMethod %s', 'httpRequest', 'GET', 'example.org'],
             [' ', 'play youtube video from id %s', 'youtube'],
             ['r', '%m.specialCharacters', 'specialCharacter', 'new line'],
-            ['R', 'open file dialog test', 'fdialog']
+            ['R', 'open file dialog test', 'fdialog'],
+
         ],
         menus: {
             httpMethod: ['GET', 'POST', 'PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH'],
@@ -341,7 +399,7 @@
             boolean: [true,false],
             specialCharacters: ['new line'],
             variableOperation: ['++','--'],
-            variableType: ['🐱','💾'],
+			variableType: ['normal', 'local storage','cloud'],
         }
     };
 
