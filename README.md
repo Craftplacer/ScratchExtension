@@ -42,8 +42,12 @@ Checks if the variable has been set before/exists.
 
 ## Variable Types
 
-| Emoji | Description                                     | Stored temporaily | Stored locally |
-|-------|-------------------------------------------------|-------------------|----------------|
-| 🐱    | Variable stored in Scratch/extension            | X                 |                |
-| 💾    | Variable stored in localStorage                 |                   | X              |
-| 🍪    | Variable stored as cookie (not implemented yet) |                   | X              |
+| Menu Option   | Description                                     | Stored temporaily | Stored     |
+|---------------|-------------------------------------------------|-------------------|------------|
+| normal        | Variable stored in Scratch/extension            | X                 | locally    |
+| local storage | Variable stored in localStorage                 |                   | locally    |
+| cookie        | Variable stored as cookie (not implemented yet) |                   | locally    |
+| cloud         | Variable stored at a server (requires init**)   | depends*          | at server  |
+
+* May vary depending on admins saving the variables. It is recommended that the server saves them.
+** see variableNetworkInit
